@@ -1,0 +1,19 @@
+.pay-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid #4CAF50; /* رنگ حاشیه دکمه */
+    color: #4CAF50; /* رنگ متن دکمه */
+    border-radius: 5px; /* گوشه‌های گرد دکمه */
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+/* افزودن تغییر رنگ زمینه در حالت هاور (موس روی دکمه) */
+.pay-button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
