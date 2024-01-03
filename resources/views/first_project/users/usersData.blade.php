@@ -36,7 +36,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div id="accordionHead">
-                                <form role="form" method="get" action="{{--{{ route('filterUsers') }}--}}">
+                                <form role="form" method="get" action="{{ route('users.filter') }}">
                                     @csrf
                                     <div class="card">
                                         <div class="card-header bg-light">
@@ -52,8 +52,8 @@
                                                             <div class="col">
                                                                 <label for="filterEmail">ایمیل</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="filterEmail"
-                                                                       name="filterEmail"
+                                                                       id="filter[email]"
+                                                                       name="filter[email]"
                                                                        placeholder="email"
                                                                        @if(isset($_GET['filterEmail']))
                                                                            value="{{$_GET['filterEmail']}}"
@@ -62,8 +62,8 @@
                                                             <div class="col">
                                                                 <label for="filterFirstName">نام</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="filterFirstName"
-                                                                       name="filterFirstName" placeholder="نام"
+                                                                       id="filter[first_name]"
+                                                                       name="filter[first_name]" placeholder="نام"
                                                                        @if(isset($_GET['filterFirstName']))
                                                                            value="{{$_GET['filterFirstName']}}"
                                                                         @endif>
@@ -71,8 +71,8 @@
                                                             <div class="col">
                                                                 <label for="filterLastName">نام خانوادگی</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="filterLastName"
-                                                                       name="filterLastName"
+                                                                       id="filter[last_name]"
+                                                                       name="filter[last_name]"
                                                                        placeholder="نام خانوادگی"
                                                                        @if(isset($_GET['filterLastName']))
                                                                            value="{{$_GET['filterLastName']}}"
@@ -90,8 +90,8 @@
                                                             <div class="col">
                                                                 <label for="filterUserName">نام کاربری</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="filterUserName"
-                                                                       name="filterUserName"
+                                                                       id="filter[user_name]"
+                                                                       name="filter[user_name]"
                                                                        placeholder="نام کاربری"
                                                                        @if(isset($_GET['filterUserName']))
                                                                            value="{{$_GET['filterUserName']}}"
@@ -100,8 +100,8 @@
                                                             <div class="col">
                                                                 <label for="filterPhoneNumber">شماره همراه</label>
                                                                 <input type="number" class="form-control"
-                                                                       id="filterPhoneNumber"
-                                                                       name="filterPhoneNumber"
+                                                                       id="filter[phone_number]"
+                                                                       name="filter[phone_number]"
                                                                        placeholder="9120000000"
                                                                        @if(isset($_GET['filterPhoneNumber']))
                                                                            value="{{$_GET['filterPhoneNumber']}}"
@@ -138,8 +138,8 @@
                                                         <div class="row">
                                                             <div class="col">
                                                                 <label for="filterGender">جنسیت</label>
-                                                                <select class="form-control" id="filterGender"
-                                                                        name="filterGender">
+                                                                <select class="form-control" id="filter[gender]"
+                                                                        name="filter[gender]">
                                                                     <option value="male"
                                                                             @if(isset($_GET['filterGender']))
                                                                                 @if($_GET['filterGender'] == 'male')
@@ -158,7 +158,7 @@
                                                                                     selected @endif
                                                                             @endif>سایر
                                                                     </option>
-                                                                    <option value="all" selected
+                                                                    <option value="" selected
                                                                             @if(isset($_GET['filterGender']))
                                                                                 @if($_GET['filterGender'] == 'all')
                                                                                     selected @endif
@@ -168,59 +168,13 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col">
-                                                                <label for="filterEducation">تحصیلات</label>
-                                                                <select class="form-control" id="filterEducation"
-                                                                        name="filterEducation">
-                                                                    <option value="high_school"
-                                                                            @if(isset($_GET['filterEducation']))
-                                                                                @if($_GET['filterEducation'] == 'high_school')
-                                                                                    selected @endif
-                                                                            @endif>دیپلم
-                                                                    </option>
-                                                                    <option value="bachelor"
-                                                                            @if(isset($_GET['filterEducation']))
-                                                                                @if($_GET['filterEducation'] == 'bachelor')
-                                                                                    selected @endif
-                                                                            @endif>کارشناسی
-                                                                    </option>
-                                                                    <option value="master"
-                                                                            @if(isset($_GET['filterEducation']))
-                                                                                @if($_GET['filterEducation'] == 'master')
-                                                                                    selected @endif
-                                                                            @endif>کارشناسی ارشد
-                                                                    </option>
-                                                                    <option value="doctorate"
-                                                                            @if(isset($_GET['filterEducation']))
-                                                                                @if($_GET['filterEducation'] == 'doctorate')
-                                                                                    selected @endif
-                                                                            @endif>دکتری
-                                                                    </option>
-                                                                    <option value="all"
-                                                                            @if(isset($_GET['filterEducation']))
-                                                                                @if($_GET['filterEducation'] == 'all')
-                                                                                    selected @endif
-                                                                            @else selected
-                                                                            @endif>همه
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
                                                                 <label for="filterPostalCode">کد پستی</label>
                                                                 <input type="number" class="form-control"
-                                                                       id="filterPostalCode"
-                                                                       name="filterPostalCode"
+                                                                       id="filter[post_code]"
+                                                                       name="filter[post_code]"
                                                                        placeholder="کد پستی را وارد کنید"
                                                                        @if(isset($_GET['filterPostalCode']))
                                                                            value="{{$_GET['filterPostalCode']}}" @endif>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="filterOccupation">شغل</label>
-                                                                <input type="text" class="form-control"
-                                                                       id="filterOccupation"
-                                                                       name="filterOccupation"
-                                                                       placeholder="شغل را وارد کنید"
-                                                                       @if(isset($_GET['filterOccupation']))
-                                                                           value="{{$_GET['filterOccupation']}}" @endif>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -233,19 +187,19 @@
                                                                 <label for="filterOrderStatus">سفارش</label>
                                                                 <select class="form-control" id="filterOrderStatus"
                                                                         name="filterOrderStatus">
-                                                                    <option value="true"
+                                                                    <option value="1"
                                                                             @if(isset($_GET['filterOrderStatus']))
                                                                                 @if($_GET['filterOrderStatus'] == "true")
                                                                                     selected @endif
                                                                             @endif>دارد
                                                                     </option>
-                                                                    <option value="false"
+                                                                    <option value="0"
                                                                             @if(isset($_GET['filterOrderStatus']))
                                                                                 @if($_GET['filterOrderStatus'] == "false")
                                                                                     selected @endif
                                                                             @endif>ندارد
                                                                     </option>
-                                                                    <option value="all"
+                                                                    <option value=""
                                                                             @if(isset($_GET['filterOrderStatus']))
                                                                                 @if($_GET['filterOrderStatus'] == "all")
                                                                                     selected @endif
@@ -258,15 +212,22 @@
                                                                 <label for="filterFactorStatus">فاکتور</label>
                                                                 <select class="form-control" id="filterFactorStatus"
                                                                         name="filterFactorStatus">
-                                                                    <option value="true"
+                                                                    <option value="paid"
                                                                             @if(isset($_GET['filterFactorStatus']))
                                                                                 @if($_GET['filterFactorStatus'] == "true") selected @endif
-                                                                            @endif>دارد
+                                                                            @endif>پرداخت شده
                                                                     </option>
-                                                                    <option value="false"
+                                                                    <option value="not paid"
                                                                             @if(isset($_GET['filterFactorStatus']))
                                                                                 @if($_GET['filterFactorStatus'] == "false") selected @endif
-                                                                            @endif>ندارد
+                                                                            @endif>پرداخت نشده
+                                                                    </option>
+                                                                    <option value=""
+                                                                            @if(isset($_GET['filterFactorStatus']))
+                                                                            @if($_GET['filterFactorStatus'] == "")
+                                                                            selected @endif
+                                                                            @else selected
+                                                                        @endif>ندارد
                                                                     </option>
                                                                     <option value="all"
                                                                             @if(isset($_GET['filterFactorStatus']))
@@ -329,38 +290,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label for="filterRole">سطح دسترسی</label>
-                                                                    <select class="form-control" id="filterRole"
-                                                                            name="filterRole">
-                                                                        <option value="1"
-                                                                                @if(isset($_GET['filterRole']))
-                                                                                    @if($_GET['filterRole'] == "1") selected @endif
-                                                                                @endif>مشتری
-                                                                        </option>
-                                                                        <option value="2"
-                                                                                @if(isset($_GET['filterRole']))
-                                                                                    @if($_GET['filterRole'] == "2") selected @endif
-                                                                                @endif>فروشنده
-                                                                        </option>
-                                                                        <option value="3"
-                                                                                @if(isset($_GET['filterRole']))
-                                                                                    @if($_GET['filterRole'] == "3") selected @endif
-                                                                                @endif>
-                                                                            ادمین
-                                                                        </option>
-                                                                        <option value="all"
-                                                                                @if(isset($_GET['filterRole']))
-                                                                                    @if($_GET['filterRole'] == "all") selected
-                                                                                @endif
-                                                                                @else selected
-                                                                                @endif>
-                                                                            همه
-                                                                        </option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -420,6 +349,7 @@
                                         </td>
                                     </tr>
                                     @endif
+
                                 @endforeach
                                 </tbody>
                             </table>

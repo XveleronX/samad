@@ -1,0 +1,100 @@
+[1mdiff --git a/app/Http/Controllers/Api/AuthorizeController.php b/app/Http/Controllers/Api/AuthorizeController.php[m
+[1mindex b5e560d..53f0a99 100644[m
+[1m--- a/app/Http/Controllers/Api/AuthorizeController.php[m
+[1m+++ b/app/Http/Controllers/Api/AuthorizeController.php[m
+[36m@@ -31,7 +31,7 @@[m [mpublic function register(RegisterRequest $request){[m
+                 ]);[m
+ [m
+                 $token = $user->createTOKEN("API TOKEN")->plainTextToken;[m
+[31m-                Session::put('token' , $token);[m
+[32m+[m[32m                /*Session::put('token' , $token);*/[m
+                 Session::flash('success' , 'کاربر با موفقیت ثبت شد');[m
+                 return redirect()->route('login_view');[m
+ [m
+[36m@@ -48,7 +48,7 @@[m [mpublic function register(RegisterRequest $request){[m
+                     'password'=> Hash::make($request->password),[m
+                 ]);[m
+                 $token = $user->createTOKEN("API TOKEN")->plainTextToken;[m
+[31m-                Session::put('token' , $token);[m
+[32m+[m[32m                /*Session::put('token' , $token);*/[m
+                 Session::flash('success' , 'کاربر با موفقیت ثبت شد');[m
+                 return redirect()->route('login_view');[m
+ [m
+[36m@@ -71,7 +71,7 @@[m [mpublic function login(LoginRequest $request){[m
+         }[m
+         $user=User::where('email' , $request->email)->first();[m
+          $token = $user->createTOKEN("API TOKEN")->plainTextToken;[m
+[31m-         Session::put('token' , $token);[m
+[32m+[m[32m         /*Session::put('token' , $token);*/[m
+ [m
+               return redirect()->route('workplace');[m
+         }catch (\Throwable $th){[m
+[36m@@ -87,7 +87,7 @@[m [mpublic function logout(Request $request)[m
+         $user->tokens->each(function ($token, $key) {[m
+         $token->delete();[m
+         });[m
+[31m-        Session::forget('token');[m
+[32m+[m[32m        /*Session::forget('token');*/[m
+         return redirect()->route('login_view');[m
+     }[m
+ }[m
+[1mdiff --git a/app/Http/Middleware/Authenticate.php b/app/Http/Middleware/Authenticate.php[m
+[1mindex d4ef644..86d3b20 100644[m
+[1m--- a/app/Http/Middleware/Authenticate.php[m
+[1m+++ b/app/Http/Middleware/Authenticate.php[m
+[36m@@ -12,6 +12,6 @@[m [mclass Authenticate extends Middleware[m
+      */[m
+     protected function redirectTo(Request $request): ?string[m
+     {[m
+[31m-        return $request->expectsJson() ? null : route('login');[m
+[32m+[m[32m        return $request->expectsJson() ? null : route('login_view');[m
+     }[m
+ }[m
+[1mdiff --git a/resources/views/first_project/Sidebar/Sidebar.blade.php b/resources/views/first_project/Sidebar/Sidebar.blade.php[m
+[1mindex 07917af..9a0b511 100644[m
+[1m--- a/resources/views/first_project/Sidebar/Sidebar.blade.php[m
+[1m+++ b/resources/views/first_project/Sidebar/Sidebar.blade.php[m
+[36m@@ -83,7 +83,7 @@[m
+                             </a>[m
+                         </li>[m
+                         <li class="nav-item">[m
+[31m-                            <a href="{{route('sellers.index')}}" class="nav-link">[m
+[32m+[m[32m                            <a href="{{route('sellers.list')}}" class="nav-link">[m
+                                 <i class="fas fa-list nav-icon"></i>[m
+                                 <p>لیست فروشندگان</p>[m
+                             </a>[m
+[1mdiff --git a/routes/web.php b/routes/web.php[m
+[1mindex 0935bd4..b7689c6 100644[m
+[1m--- a/routes/web.php[m
+[1m+++ b/routes/web.php[m
+[36m@@ -24,9 +24,9 @@[m
+  Route::get('/register', [AuthorizeController::class , 'register_view'])->name('register_view');[m
+ Route::any('/auth/register', [AuthorizeController::class , 'register'])->name('register');[m
+ [m
+[31m-Route::middleware(['auth_rize'])->group(function (){[m
+[32m+[m[32m/*Route::middleware(['auth_rize'])->group(function (){*/[m
+ Route::middleware(['Sellers_Status'])->group(function (){[m
+[31m-Route::any('/' , [AuthorizeController::class , 'logout'])->name('logout');[m
+[32m+[m[32mRoute::any('/logout' , [AuthorizeController::class , 'logout'])->name('logout');[m
+ [m
+  Route::get('/workplace', function () {[m
+     return view('first_project.workplace');[m
+[36m@@ -34,10 +34,9 @@[m
+ [m
+ //users[m
+  Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('roles:admin');[m
+[31m- Route::get('/sellers', [UserController::class, 'sellers_index'])->name('sellers.index')->middleware('roles:admin');[m
+[31m- Route::get('/sellers/accepted', [UserController::class, 'sellers_list'])->name('sellers.list')->middleware('roles:admin');[m
+[32m+[m[32m Route::get('/sellers', [UserController::class, 'sellers_list'])->name('sellers.list')->middleware('roles:admin');[m
+  Route::get('/sellers/notaccepted', [UserController::class, 'sellers_notaccepted'])->name('sellers.notaccepted')->middleware('roles:admin');[m
+[31m- Route::any('//sellers/{id}/accept', [UserController::class, 'accept_seller'])->name('sellers.accept')->middleware('roles:admin');[m
+[32m+[m[32m Route::any('/sellers/{id}/accept', [UserController::class, 'accept_seller'])->name('sellers.accept')->middleware('roles:admin');[m
+  Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('roles:admin');[m
+  Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('roles:admin');[m
+  Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('roles:admin,user,seller');[m
+[36m@@ -71,4 +70,4 @@[m
+  Route::post('/checks/{id}/delete', [CheckController::class, 'destroy'])->name('checks.destroy')->middleware('roles:admin');[m
+  Route::any('/checks/{id}/pay' , [CheckController::class, 'pay'])->name('checks.pay')->middleware('roles:user,admin');[m
+ });[m
+[31m-});[m
+[32m+[m[32m/*});*/[m

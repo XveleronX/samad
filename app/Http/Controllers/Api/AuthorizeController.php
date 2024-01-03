@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Models\Seller_status;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
@@ -29,7 +31,10 @@ class AuthorizeController extends Controller
                     'role'=> $request->role,
                     'password'=> Hash::make($request->password),
                 ]);
-
+                $userId = DB::getPdo()->lastInsertId();
+                Seller_status::create([
+                    'user_id'=>$userId
+                ]);
                 $token = $user->createTOKEN("API TOKEN")->plainTextToken;
                 Session::put('token' , $token);
                 Session::flash('success' , 'کاربر با موفقیت ثبت شد');

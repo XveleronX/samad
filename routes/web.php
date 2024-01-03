@@ -33,11 +33,11 @@ Route::any('/' , [AuthorizeController::class , 'logout'])->name('logout');
  })->name('workplace');
 
 //users
+ Route::get('/users/filter', [UserController::class, 'filter'])->name('users.filter')->middleware('roles:admin');
  Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('roles:admin');
  Route::get('/sellers', [UserController::class, 'sellers_index'])->name('sellers.index')->middleware('roles:admin');
- Route::get('/sellers/accepted', [UserController::class, 'sellers_list'])->name('sellers.list')->middleware('roles:admin');
  Route::get('/sellers/notaccepted', [UserController::class, 'sellers_notaccepted'])->name('sellers.notaccepted')->middleware('roles:admin');
- Route::any('//sellers/{id}/accept', [UserController::class, 'accept_seller'])->name('sellers.accept')->middleware('roles:admin');
+ Route::any('/sellers/{id}/accept', [UserController::class, 'accept_seller'])->name('sellers.accept')->middleware('roles:admin');
  Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('roles:admin');
  Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('roles:admin');
  Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('roles:admin,user,seller');

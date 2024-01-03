@@ -204,7 +204,7 @@
                                                 {{--@method('PUT')--}}
                                                 <input type="hidden" name="purches" value="{{--{{ $user->id }}--}}">
                                                 <button type="submit">
-                                                    <i class="fa-regular fa-cc-paypal"></i>
+                                                    <i class="fa-solid fa-check"></i>
                                                 </button>
 
                                             </form>
