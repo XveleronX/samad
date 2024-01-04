@@ -22,7 +22,7 @@ class PayStatus
 
         $id = $request->route('id');
         $status=Check::where('order_id' , $id)->first('pay_status');
-        if ($status->pay_status == 'paid'){
+        if ($status && $status->pay_status == 'paid'){
             Session::flash('paid' , 'you have paid your factor');
             return back();
         }else{

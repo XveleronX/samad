@@ -27,64 +27,46 @@ class UserController extends Controller
             $price_max=$request->filterOrderTotalPriceMax;
             $factor=$request->filterFactorStatus;
 
-            if (is_null($price_max) && is_null($price_min)){
-                $usersQuery = QueryBuilder::for(User::class)
-                    ->allowedFilters(['email', 'first_name', 'last_name', 'user_name', 'phone_number', 'gender', 'post_code'])
-                    ->with('orders')
-                    ->withCount('orders')
-                    ->withExists('orders')
-                    ->when($min_age, function ($query, $min_age) {
-                        return $query->where('age', '>=', $min_age);
-                    })
-                    ->when($max_age, function ($query, $max_age) {
-                        return $query->where('age', '<=', $max_age);
-                    });
-
-                if (!is_null($min_orders)) {
-                    $usersQuery->havingRaw('orders_count >= ?', [$min_orders]);
-                }
-                if (!is_null($max_orders)) {
-                    $usersQuery->havingRaw('orders_count <= ?', [$max_orders]);
-                }
-                if (!is_null($orders_status)){
-                    $usersQuery->havingRaw('orders_exists = ?', [$orders_status]);
-                }
-                $users = $usersQuery->get();
-                dd($users);
-                return view('first_project.users.usersData', ['users' => $users]);
-            }else{
-                $usersQuery = QueryBuilder::for(User::class)
-                    ->allowedFilters(['email', 'first_name', 'last_name', 'user_name', 'phone_number', 'gender', 'post_code'])
-                    ->with('orders')
-                    ->withCount('orders')
-                    ->withExists('orders')
-                    ->when($min_age, function ($query, $min_age) {
-                        return $query->where('age', '>=', $min_age);
-                    })
-                    ->when($max_age, function ($query, $max_age) {
-                         $query->where('age', '<=', $max_age);
-                    })
-                    ->whereHas('orders', function ($query) use ($request) {
-                        $query->when($request->filled('totalPriceMin'), function ($subQuery) use ($request) {
-                            $subQuery->where('total_price', '>=', $request->totalPriceMin);
-                        })->when($request->filled('totalPriceMax'), function ($subQuery) use ($request) {
-                            $subQuery->where('total_price', '<=', $request->totalPriceMax);
-                        });
-                    });
-
-                if (!is_null($min_orders)) {
-                    $usersQuery->havingRaw('orders_count >= ?', [$min_orders]);
-                }
-                if (!is_null($max_orders)) {
-                    $usersQuery->havingRaw('orders_count <= ?', [$max_orders]);
-                }
-                if (!is_null($orders_status)){
-                    $usersQuery->havingRaw('orders_exists = ?', [$orders_status]);
-                }
-                $users = $usersQuery->get();
-                dd($users);
-                return view('first_project.users.usersData', ['users' => $users]);
+            $usersQuery = QueryBuilder::for(User::class)
+                ->allowedFilters(['email', 'first_name', 'last_name', 'user_name', 'phone_number', 'gender', 'post_code'])
+                ->with('orders')
+                ->withCount('orders')
+                ->withExists('orders')
+                ->when($min_age, function ($query) use ($min_age) {
+                    return $query->where('age', '>=', $min_age);
+                })
+                ->when($max_age, function ($query) use ($max_age) {
+                    $query->where('age', '<=', $max_age);
+                });
+            if (!is_null($min_orders)) {
+                $usersQuery->havingRaw('orders_count >= ?', [$min_orders]);
             }
+            if (!is_null($max_orders)) {
+                $usersQuery->havingRaw('orders_count <= ?', [$max_orders]);
+            }
+            if (!is_null($orders_status)){
+                $usersQuery->havingRaw('orders_exists = ?', [$orders_status]);
+            }
+            if (!is_null($price_min)){
+                $usersQuery->whereHas('orders', function ($query) use ($price_min) {
+                        $query->where('total_price', '>=', $price_min);
+                });
+            }
+            if (!is_null($price_max)){
+                $usersQuery->whereHas('orders', function ($query) use ($price_max) {
+                    $query->where('total_price', '<=', $price_max);
+                });
+            }
+            /*if (!$factor == 'all'){
+                $usersQuery->having('orders', function ($query) use ($factor) {
+                    $query->whereHas('checks' , function ($subquery) use ($factor){
+                        $subquery->where('pay_status' , $factor);
+                    });
+                });
+            }*/
+            $users = $usersQuery->get();
+            dd($users);
+            return view('first_project.users.usersData', ['users' => $users]);
         }
 
     public function  sellers_notaccepted(): view
@@ -100,7 +82,7 @@ class UserController extends Controller
         Seller_status::where('user_id' , $id)->update([
             'status'=>'accepted'
         ]);
-        return redirect()->route('sellers.list');
+        return redirect()->route('sellers.index');
     }
     public function sellers_index(): view
     {

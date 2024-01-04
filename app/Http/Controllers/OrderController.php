@@ -14,11 +14,36 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    public function filter(Request $request)
+    {
+        $order_title=$request->filterTitle;
+        $user_name=$request->filterUserName;
+        $price_min=$request->filterTotal_priceMin;
+        $price_max=$request->filterTotal_priceMax;
+
+        $orders=Order::with('user')
+            ->when($order_title , function ($query) use ($order_title){
+                $query->where('title' , $order_title);
+            })
+            ->when($user_name , function ($query) use ($user_name){
+                $query->whereHas('user', function ($subquery) use ($user_name) {
+                    $subquery->where('user_name', '=', $user_name);});
+            })
+            ->when($price_min , function ($query) use ($price_min){
+                $query->where('total_price', '>=' , $price_min);
+            })
+            ->when($price_max , function ($query) use ($price_max){
+                $query->where('total_price', '<=' , $price_max);
+            })
+            ->get();
+
+
+        return view('first_project.orders.ordersData' , ['orders' => $orders]);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index(): view
-
     {
         if (auth()->user()->role == 'user'){
             $id=auth()->id();

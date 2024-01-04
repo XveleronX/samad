@@ -46,6 +46,7 @@ Route::any('/' , [AuthorizeController::class , 'logout'])->name('logout');
 
 
  //products
+ Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter')->middleware('roles:admin,seller');
  Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('roles:seller,admin');
  Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware('roles:seller,admin');
  Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware('roles:seller,admin');
@@ -54,6 +55,7 @@ Route::any('/' , [AuthorizeController::class , 'logout'])->name('logout');
  Route::post('/products/{id}/delete', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('roles:seller,admin');
 
  //orders
+ Route::get('/orders/filter', [OrderController::class, 'filter'])->name('orders.filter')->middleware('roles:admin,user');
  Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware('roles:seller,admin,user');
  Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware('roles:user,admin');
  Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('roles:user,admin');

@@ -38,6 +38,95 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <div id="accordionHead">
+                                <form role="form" method="get" action="{{ route('products.filter') }}">
+                                    @csrf
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <a class="btn btn-secondary" data-bs-toggle="collapse" href="#fillters">
+                                                فیلتر ها
+                                            </a>
+                                        </div>
+                                        <div class="collapse" id="fillters" data-bs-parent="#accordionHead">
+                                            <div class="card-body">
+                                                <div class="form-control">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label for="filterName">نام محصول</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="filterName"
+                                                                       name="filterName"
+                                                                       placeholder="نام محصول"
+                                                                       @if(isset($_GET['filterName']))
+                                                                       value="{{$_GET['filterName']}}"
+                                                                    @endif>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="filterPrice">قیمت</label>
+                                                                <label for="filterPriceMin"
+                                                                       id="filterPrice">از</label>
+                                                                <input type="number" class="form-control"
+                                                                       id="filterPriceMin" name="filterPriceMin"
+                                                                       placeholder="از"
+                                                                       @if(isset($_GET['filterPriceMin']))
+                                                                       value="{{$_GET['filterPriceMin']}}"
+                                                                    @endif>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="filterPriceMax">تا</label>
+                                                                <input type="number" class="form-control"
+                                                                       id="filterPriceMax" name="filterPriceMax"
+                                                                       placeholder="تا"
+                                                                       @if(isset($_GET['filterPriceMax']))
+                                                                       value="{{$_GET['filterPriceMax']}}"
+                                                                    @endif>
+                                                            </div>
+                                                            <br>
+                                                            <div class="col">
+                                                                <div class="row">
+
+                                                                    <div class="col">
+                                                                        <label for="filterInventory">موجودی</label>
+                                                                        <label for="filterInventoryMin"
+                                                                               id="filterInventory">از</label>
+                                                                        <input type="number" class="form-control"
+                                                                               id="filterInventoryMin" name="filterInventoryMin"
+                                                                               placeholder="از"
+                                                                               @if(isset($_GET['filterInventoryMin']))
+                                                                               value="{{$_GET['filterInventoryMin']}}"
+                                                                            @endif>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <label for="filterInventoryMax">تا</label>
+                                                                        <input type="number" class="form-control"
+                                                                               id="filterInventoryMax" name="filterAInventoryMax"
+                                                                               placeholder="تا"
+                                                                               @if(isset($_GET['filterInventoryMax']))
+                                                                               value="{{$_GET['filterInventoryMax']}}"
+                                                                            @endif>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <div class="card-footer">
+                                                <button type="submit" class="btn btn-info">فیلتر</button>
+                                                <a href="{{--{{ route('Users_data') }}--}}">
+                                                    <button type="button" class="btn btn-warning">حذف فیلتر ها</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                </form>
+                            </div>
                             <table id="Data" class="table table-bordered table-striped table table-hover">
                                 <thead>
                                 <tr>
