@@ -22,7 +22,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="route('editProfImage')" class="nav-link">
+                            <a href="{{route('users.image')}}" class="nav-link">
                                 <i class="fas fa-image"></i>
                                 <p>تغییر عکس پروفایل</p>
                             </a>

@@ -7,6 +7,9 @@ use App\Http\Middleware\PayStatus;
 use App\Http\Middleware\Roles;
 use App\Http\Middleware\Sellers_Status;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -72,5 +75,8 @@ class Kernel extends HttpKernel
         'pay_status' => PayStatus::class,
         'roles'=> Roles::class,
         'Sellers_Status'=>Sellers_Status::class,
+        'role'=>RoleMiddleware::class,
+        'permission'=>PermissionMiddleware::class,
+        'role_or_permission'=>RoleOrPermissionMiddleware::class,
     ];
 }

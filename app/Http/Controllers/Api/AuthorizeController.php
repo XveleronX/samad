@@ -7,12 +7,14 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\Seller_status;
 use App\Models\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
 
 
 class AuthorizeController extends Controller
@@ -21,8 +23,10 @@ class AuthorizeController extends Controller
     {
         return view('first_project.authorize.register');
     }
-
-    public function register(RegisterRequest $request){
+    public function create(Request $request){
+        dd($request);
+    }
+    public function register(RegisterRequest $request , User $user){
         if ($request->role == 'seller'){
             try {
                 $user=User::create([
@@ -38,11 +42,16 @@ class AuthorizeController extends Controller
                 $token = $user->createTOKEN("API TOKEN")->plainTextToken;
                 Session::put('token' , $token);
                 Session::flash('success' , 'کاربر با موفقیت ثبت شد');
-                return redirect()->route('login_view');
+                return response()->json([
+                    'token'=>$token,
+                    'statuses'=>'success',
+                ],200);
 
             } catch (\Throwable $th){
                 Session::flash('failed_register' , 'خطایی صورت گرفته لطفا مجدد تلاش کنید');
-                return back();
+                return response()->json([
+                    'statuses'=>'failed',
+                ],200);
             }
         }else{
             try {
@@ -55,11 +64,16 @@ class AuthorizeController extends Controller
                 $token = $user->createTOKEN("API TOKEN")->plainTextToken;
                 Session::put('token' , $token);
                 Session::flash('success' , 'کاربر با موفقیت ثبت شد');
-                return redirect()->route('login_view');
+                return response()->json([
+                    'token'=>$token,
+                    'statuses'=>'success',
+                ],200);
 
             } catch (\Throwable $th){
                 Session::flash('failed_register' , 'خطایی صورت گرفته لطفا مجدد تلاش کنید');
-                return back();
+                return response()->json([
+                    'statuses'=>'failed',
+                ],200);
             }
      }
     }
@@ -69,19 +83,30 @@ class AuthorizeController extends Controller
     }
 
     public function login(LoginRequest $request){
+
         try {
-        if (!Auth::attempt($request->only(['email','password']))){
-            Session::flash('user_or_password_wrong' , 'پسورد یا نام کاربری اشتباه است');
-            return back();
+
+        if (!Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])){
+
+            return response()->json([
+                'statuses'=>'wrong password',
+            ],200);
         }
+
         $user=User::where('email' , $request->email)->first();
          $token = $user->createTOKEN("API TOKEN")->plainTextToken;
-         Session::put('token' , $token);
 
-              return redirect()->route('workplace');
+
+         return response()->json([
+             'status'=>'success',
+             'token'=>$token
+         ],200);
         }catch (\Throwable $th){
-            Session::flash('failed_login' , 'خطایی صورت گرفته لطفا مجدد تلاش کنید');
-            return back();
+
+            return response()->json([
+                'statuses'=>'failed',
+                'massage'=>$th->getMessage(),
+            ],200);
         }
 
     }
@@ -93,6 +118,17 @@ class AuthorizeController extends Controller
         $token->delete();
         });
         Session::forget('token');
-        return redirect()->route('login_view');
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
+    }
+    public function redirect($provider){
+        return Socialite::driver($provider)->redirect();
+    }
+    public function callback($provider)
+    {
+        $user = Socialite::driver($provider)->user();
+        dd($user);
+        return \view('first_project.authorize.login_role' , ['user'=>$user]);
     }
 }

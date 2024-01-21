@@ -38,49 +38,71 @@ class OrderController extends Controller
             ->get();
 
 
-        return view('first_project.orders.ordersData' , ['orders' => $orders]);
+        return response()->json([
+            'statuses'=>'success',
+            'orders' => $orders
+        ],200);
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(): view
+    public function index()
     {
         if (auth()->user()->role == 'user'){
             $id=auth()->id();
 
             $orders=Order::with('products')->where('user_id' , $id)->get();
-            return view('first_project.orders.ordersData' , ['orders' => $orders]);
+            return response()->json([
+                'statuses'=>'success',
+                'orders' => $orders
+            ],200);
 
         }elseif(auth()->user()->role == 'seller'){
         $id=Check::where('pay_status' , 'paid')->get('order_id');
 
         $orders=Order::with('products')->get();
 
-        return view('first_project.orders.ordersData' , ['orders' => $orders , 'ids' => $id]);
+        return response()->json([
+            'statuses'=>'success',
+            'orders' => $orders ,
+            'ids' => $id
+        ],200);
         }else{
             $status=Check::all();
 
             $orders=Order::with('products')->get();
 
-            return view('first_project.orders.ordersData' , ['orders' => $orders , 'statuses'=>$status]);
+            return response()->json([
+                'statuseses'=>'success',
+                'orders' => $orders ,
+                'statuses'=>$status
+            ],200);
         }
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): view
+    public function create()
     {
         if (auth()->user()->role == 'user'){
             $id=auth()->id();
             $customers=User::find($id);
             /*dd($customers);*/
             $products_available=Product::all();
-            return view('first_project.orders.addOrder' , ['customers'=> $customers, 'products_available'=>$products_available]);
+            return response()->json([
+                'statuses'=>'success',
+                'customers'=> $customers,
+                'products_available'=>$products_available
+            ],200);
         }else{
             $customers=User::all();
             $products_available=Product::all();
-            return view('first_project.orders.addOrder' , ['customers'=> $customers, 'products_available'=>$products_available]);
+            return response()->json([
+                'statuses'=>'success',
+                'customers'=> $customers,
+                'products_available'=>$products_available
+            ],200);
         }
     }
 
@@ -121,7 +143,9 @@ class OrderController extends Controller
             }
         }
 
-        return redirect()->route('orders.index');
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
 
     }
 
@@ -136,14 +160,19 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): view
+    public function edit(string $id)
     {
         $customers=User::all();
         $products=Product::all();
         $order=Order::find($id);
 
         //$order->save();
-        return view('first_project.orders.editOrderMenue' , ['order'=> $order, 'customers'=>$customers , 'products' => $products] );
+        return response()->json([
+            'statuses'=>'success',
+            'order'=> $order,
+            'customers'=>$customers ,
+            'products' => $products
+        ],200);
     }
 
     /**
@@ -179,7 +208,9 @@ class OrderController extends Controller
     }
         $orders->save();
 
-        return redirect()->route('orders.index');
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 
     /**
@@ -189,6 +220,8 @@ class OrderController extends Controller
     {
         $order=Order::find($id);
         $order->delete();
-        return back();
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 }

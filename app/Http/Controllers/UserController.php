@@ -3,21 +3,35 @@
 namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\Order;
+use App\Http\Requests\ImageUpload;
 use App\Models\Seller_status;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 
 class UserController extends Controller
 {
 
-        public  function filter(Request $request)
-        {
+    public function image(Request $request , string $id)
+    {
+        /*in code kheily khafane*/
+        /*User::create($request->validated());*/
+
+        User::find($id)->addMediaFromRequest('image')->toMediaCollection();
+        $media = User::find($id)->getMedia();
+
+        return response()->json([
+            'status'=>'success',
+            'media'=>$media,
+        ],200);
+    }
+
+    public  function filter(Request $request)
+    {
+
             $min_age = $request->filterAgeMin;
             $max_age = $request->filterAgeMax;
             $min_orders=$request->filterOrderCountMin;
@@ -26,6 +40,7 @@ class UserController extends Controller
             $price_min=$request->filterOrderTotalPriceMin;
             $price_max=$request->filterOrderTotalPriceMax;
             $factor=$request->filterFactorStatus;
+
 
             $usersQuery = QueryBuilder::for(User::class)
                 ->allowedFilters(['email', 'first_name', 'last_name', 'user_name', 'phone_number', 'gender', 'post_code'])
@@ -57,49 +72,54 @@ class UserController extends Controller
                     $query->where('total_price', '<=', $price_max);
                 });
             }
-            /*if (!$factor == 'all'){
-                $usersQuery->having('orders', function ($query) use ($factor) {
-                    $query->whereHas('checks' , function ($subquery) use ($factor){
-                        $subquery->where('pay_status' , $factor);
-                    });
-                });
-            }*/
             $users = $usersQuery->get();
-            dd($users);
-            return view('first_project.users.usersData', ['users' => $users]);
+
+            return response()->json([
+                'users'=>$users
+            ],200);
         }
 
-    public function  sellers_notaccepted(): view
+    public function  sellers_notaccepted()
     {
         $statuses=Seller_status::all();
 
         $users=User::all();
 
-        return view('first_project.users.notacceptedsellersData' , ['users'=>$users , 'statuses'=>$statuses]);
+        return response()->json([
+            'statuses'=>$statuses,
+            'users'=>$users
+        ],200);
     }
     public function accept_seller(string $id)
     {
         Seller_status::where('user_id' , $id)->update([
             'status'=>'accepted'
         ]);
-        return redirect()->route('sellers.index');
+        return response()->json([
+            'statuses'=>'seleer sccepted',
+        ],200);
     }
-    public function sellers_index(): view
+    public function sellers_index()
     {
         $statuses=Seller_status::all();
 
         $users=User::all();
 
-        return view('first_project.users.sellersData' , ['users'=>$users , 'statuses'=>$statuses]);
+        return response()->json([
+            'statuses'=>$statuses,
+            'users'=>$users
+        ],200);
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(): view
+    public function index()
     {
         $users=User::all();
 
-        return view('first_project.users.usersData', ['users' => $users]);
+        return response()->json([
+            'users'=>$users
+        ],200);
     }
 
     /**
@@ -131,7 +151,9 @@ class UserController extends Controller
         $User->password = md5($request->password);
         $User->save();
 
-        return redirect()->route('users.index');
+        return response()->json([
+            'statuses'=>'user has been create',
+        ],200);
 
     }
 
@@ -146,11 +168,13 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id): view
+    public function edit($id)
     {
         $user=User::find($id);
             $user->save();
-        return view('first_project.users.editUser', ['user' => $user]);
+        return response()->json([
+            'users'=>$user
+        ],200);
 
     }
 
@@ -174,7 +198,9 @@ class UserController extends Controller
             $user->address = $request->address;
         $user->save();
 
-            return redirect()->route('users.index');
+        return response()->json([
+            'statuses'=>'user has been updated',
+        ],200);
 
     }
 
@@ -185,6 +211,8 @@ class UserController extends Controller
     {
         $User=User::find($id);
         $User->delete();
-        return back();
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 }

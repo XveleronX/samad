@@ -34,9 +34,9 @@
 
             <form action="{{route('login')}}" method="post">
                 @csrf
-                @if ($errors->has('email'))
+                {{--@if ($errors->has('email'))
                     <div class="alert alert-danger">{{ $errors->first('email') }}</div>
-                @endif
+                @endif--}}
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="ایمیل"
                            name="email" value="{{ old('email') }}">

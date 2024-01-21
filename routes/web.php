@@ -1,5 +1,5 @@
 <?php
-
+/*
 use App\Http\Controllers\Api\AuthorizeController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\OrderController;
@@ -73,4 +73,18 @@ Route::any('/' , [AuthorizeController::class , 'logout'])->name('logout');
  Route::post('/checks/{id}/delete', [CheckController::class, 'destroy'])->name('checks.destroy')->middleware('roles:admin');
  Route::any('/checks/{id}/pay' , [CheckController::class, 'pay'])->name('checks.pay')->middleware('roles:user,admin');
 });
-});
+});*/
+
+use App\Http\Controllers\Api\AuthorizeController;
+use Illuminate\Support\Facades\Route;
+
+
+Route::get('/auth/{provider}/redirect', [AuthorizeController::class , 'redirect'])->name('redirect.provider');
+
+Route::get('/auth/{provider}/callback', [AuthorizeController::class , 'callback'])->name('callback.provider');
+
+Route::get('/login', [AuthorizeController::class , 'login_view'])->name('login_view');
+Route::post('/auth/login', [AuthorizeController::class , 'login'])->name('login');
+
+Route::get('/register', [AuthorizeController::class , 'register_view'])->name('register_view');
+Route::any('/auth/register', [AuthorizeController::class , 'create'])->name('register');

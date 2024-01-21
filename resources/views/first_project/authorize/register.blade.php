@@ -26,12 +26,12 @@
             <form action="{{route('register')}}" method="post">
                 @csrf
                 <div class="input-group mb-3">
-                    <div class="col">
+                    {{--<div class="col">
                     <input type="text" class="form-control" name="user_name" placeholder="نام کاربری">
                     @error('user_name')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                </div>
+                </div>--}}
                     <div class="input-group-append">
                         <span class="fa fa-user input-group-text"></span>
                     </div>
@@ -49,24 +49,24 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <div class="col">
+                    {{--<div class="col">
                     <input type="email" class="form-control" name="email" placeholder="ایمیل">
                     @error('email')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                    </div>
+                    </div>--}}
                     <div class="input-group-append">
                         <span class="fa fa-envelope input-group-text"></span>
 
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <div class="col">
+                    {{--<div class="col">
                     <input type="password" class="form-control" name="password" placeholder="رمز عبور">
                     @error('password')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                </div>
+                </div>--}}
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="fa-solid fa-fingerprint"></i>
@@ -74,12 +74,12 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <div class="col">
+                    {{--<div class="col">
                     <input type="password" class="form-control" name="password_confirmation" placeholder="تکرار رمز عبور">
                     @error('password_confirmation')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                    </div>
+                    </div>--}}
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <i class="fa-solid fa-lock"></i>
@@ -104,11 +104,11 @@
 
             <div class="social-auth-links text-center">
                 <p>- یا -</p>
-                <a href="#" class="btn btn-block btn-primary">
+                <a href="{{route('redirect.provider' , ['provider'=>'facebook'])}}" type="button" class="btn btn-block btn-primary">
                     <i class="fa-brands fa-facebook fa-lg"></i>
                     ثبت نام با اکانت فیسوبک
                 </a>
-                <a href="#" class="btn btn-block btn-danger">
+                <a href="{{route('redirect.provider' , ['provider'=>'google'])}}" class="btn btn-block btn-danger">
                     <i class="fa-brands fa-google"></i>
                     ثبت نام با گوگل
                 </a>

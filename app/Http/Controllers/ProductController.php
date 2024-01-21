@@ -37,16 +37,22 @@ class ProductController extends Controller
         }
         $products= $productsQuery->get();
 
-        return view('first_project.products.productsData' , ['products' => $products] );
+        return response()->json([
+            'statuses'=>'success',
+            'products' => $products
+        ],200);
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(): view
+    public function index()
     {
         $products=Product::all();
 
-        return view('first_project.products.productsData' , ['products' => $products] );
+        return response()->json([
+            'statuses'=>'success',
+            'products' => $products
+        ],200);
     }
 
     /**
@@ -68,7 +74,9 @@ class ProductController extends Controller
           $Product->inventory= $request->amount_available;
           $Product->description=$request->explanation;
         $Product->save();
-        return redirect()->route('products.index');
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 
     /**
@@ -82,11 +90,14 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): view
+    public function edit(string $id)
     {
         $product=Product::find($id);
         $product->save();
-        return view('first_project.products.editProductMenue' , ['product'=> $product] );
+        return response()->json([
+            'statuses'=>'success',
+            'product'=> $product
+        ],200);
     }
 
     /**
@@ -100,7 +111,9 @@ class ProductController extends Controller
         $Product->inventory= $request->amount_available;
         $Product->description=$request->explanation;
         $Product->save();
-        return redirect()->route('products.index');
+        return response()->json([
+        'statuses'=>'success',
+    ],200);
     }
 
     /**
@@ -111,6 +124,8 @@ class ProductController extends Controller
         $Product=Product::find($id);
         $Product->delete();
 
-        return back();
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 }

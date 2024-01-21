@@ -18,7 +18,7 @@ class CheckController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): view
+    public function index()
     {
 
         $checks=Check::with('order')->get();
@@ -26,16 +26,22 @@ class CheckController extends Controller
         $products=Order::with('products')->get();
 
 
-        return view('first_project.checks.checksData' , ['checks'=>$checks , 'users'=>$users , 'products' => $products]);
+        return response()->json([
+            'checks'=>$checks ,
+            'users'=>$users ,
+            'products' => $products
+        ],200);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): view
+    public function create()
     {
         $orders=Order::all();
-        return view('first_project.checks.addCheck' , ['orders'=>$orders]);
+        return response()->json([
+            'orders'=>$orders
+        ],200);
     }
 
     /**
@@ -47,7 +53,9 @@ class CheckController extends Controller
         Check::create([
             'order_id'=>$request->order_id,
         ]);
-        return redirect()->route('checks.index');
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 
     /**
@@ -59,7 +67,9 @@ class CheckController extends Controller
     Check::where('order_id' , $id)->update([
         'pay_status'=>'paid'
     ]);
-    return back();
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 
     /**
@@ -69,7 +79,10 @@ class CheckController extends Controller
     {
         $checks=Check::find($id);
         $order_id = $checks->order_id;
-        return redirect()->route('orders.edit' , ['id'=>$order_id]);
+        return response()->json([
+        'statuses'=>'success',
+        'id'=>$order_id
+    ],200);
     }
 
     /**
@@ -83,7 +96,10 @@ class CheckController extends Controller
         return redirect()->route('checks.index');*/
         $checks=Check::find($id);
         $order_id = $checks->order_id;
-        return redirect()->route('orders.edit' , ['id'=>$order_id]);
+        return response()->json([
+            'statuses'=>'success',
+            'id'=>$order_id
+        ],200);
     }
 
     /**
@@ -94,6 +110,8 @@ class CheckController extends Controller
         $Check=Check::find($id);
         $Check->delete();
 
-        return back();
+        return response()->json([
+            'statuses'=>'success',
+        ],200);
     }
 }
